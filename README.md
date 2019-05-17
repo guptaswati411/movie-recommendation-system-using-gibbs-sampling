@@ -63,7 +63,7 @@ The solid line is the man of predicted ratings and the dotted lines show the ran
 
 ### Case 2
 L = 10, number of samples = 1000, burn in = 200
-![mu2](/images/mu_case2.png)
+![mu2](/images/mu_2.png)
 ![sigma2](/images/Sigma_2.png)
 ![train2](/images/train_2.png)
 ![test2](/images/test_2.png)
@@ -71,7 +71,7 @@ L = 10, number of samples = 1000, burn in = 200
 
 ### Case 3
 L = 20, number of samples = 1500, burn in = 1000
-![mu3](/images/mu_case3.png)
+![mu3](/images/mu_3.png)
 ![sigma3](/images/Sigma_3.png)
 ![train3](/images/train_3.png)
 ![test3](/images/test_3.png)
@@ -79,7 +79,7 @@ L = 20, number of samples = 1500, burn in = 1000
 
 ### Case 2
 L = 2, number of samples = 5000, burn in = 4000
-![mu4](/images/mu_case4.png)
+![mu4](/images/mu_4.png)
 ![sigma4](/images/Sigma_4.png)
 ![train4](/images/train_4.png)
 ![test4](/images/test_4.png)
