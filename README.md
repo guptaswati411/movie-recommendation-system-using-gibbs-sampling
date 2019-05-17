@@ -26,4 +26,4 @@ The following priors are assumed for the parameters
 ![priors](/images/priors.png)
 
 ### Conditionals
-The derivation of the conditionals can be found in the [report](report.pdf)
+The derivation of the conditionals can be found in the [report](\Report.pdf)
