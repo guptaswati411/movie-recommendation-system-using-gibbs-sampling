@@ -26,4 +26,11 @@ The following priors are assumed for the parameters
 ![priors](/images/priors.png)
 
 ### Conditionals
-The derivation of the conditionals can be found in the [report](/Report.pdf)
+The derivation of the conditionals can be found in the [report](/Report.pdf). The final conditionals are
+
+![mu](/images/mu_conditional.png)
+![sigma](/images/sigma_conditional.png)
+![gamma](/images/gamma_conditional.png)
+![theta](/images/theta_conditional.png)
+
+We have (U+M)x(L+1)+2 parameters to estimate. We build a Gibbs sampler to estimate these parameters.
