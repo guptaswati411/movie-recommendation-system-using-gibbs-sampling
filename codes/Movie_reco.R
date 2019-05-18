@@ -1,24 +1,10 @@
----
-title: "Project"
-author: "Swati Gupta"
-date: "4/12/2019"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
 rm(list = ls())
 library(invgamma)
 library(data.table)
 library(mnormt)
 library(coda)
 library(ggplot2)
-```
 
-```{r}
 gamma_m_sample=function(xm,ym,sigma2,sig_gamma)
 {
   inverse=solve(sig_gamma)
@@ -27,9 +13,7 @@ gamma_m_sample=function(xm,ym,sigma2,sig_gamma)
   sample=rmnorm(1,mean,variance)
   return (sample)
 }
-```
 
-```{r}
 theta_u_sample=function(xu,yu,sigma2,sig_theta)
 {
   inverse=solve(sig_theta)
@@ -38,15 +22,12 @@ theta_u_sample=function(xu,yu,sigma2,sig_theta)
   sample=rmnorm(1,mean,variance)
   return (sample)
 }
-```
 
-
-```{r}
 gibbs=function (mdata,L,m,gamma_var,theta_var)
 {
   data=copy(mdata)
   n=length(data$rating)
-
+  
   total_avg=mean(data$rating)
   user_avg=aggregate(rating~userId,data,mean)
   movie_avg=aggregate(rating~movieId,data,mean)
@@ -99,10 +80,7 @@ gibbs=function (mdata,L,m,gamma_var,theta_var)
   r=list("mu"=musamples,"sigma2"=sigma2samples,"theta"=thetasamples,"gamma"=gammasamples)
   return(r)
 }
-```
 
-
-```{r}
 mcmcplots=function(gibbsresult)
 {
   cumuplot(mcmc(gibbsresult$mu),main="Cumulative plot of mu",ylab="mu")
@@ -118,10 +96,7 @@ mcmcplots=function(gibbsresult)
   print(effectiveSize(gibbsresult$gamma[,1,]))
   print(effectiveSize(gibbsresult$theta[,1,]))
 }
-```
 
-
-```{r}
 plot_results=function(data,gibbsresult,burnin)
 {
   m=length(gibbsresult$mu)
@@ -147,9 +122,6 @@ plot_results=function(data,gibbsresult,burnin)
   lines(sdtable$actual,meantable$predicted-sdtable$predicted,lty=2)
 }
 
-```
-
-```{r}
 validation_results=function(gibbsresult,testdata,burnin)
 {
   m=length(gibbsresult$mu)
@@ -174,40 +146,29 @@ validation_results=function(gibbsresult,testdata,burnin)
   lines(sdtable$actual,meantable$predicted+sdtable$predicted,lty=2)
   lines(sdtable$actual,meantable$predicted-sdtable$predicted,lty=2)
 }
-```
 
-
-```{r}
 movie=read.csv("ratings_small.csv")
 perusercount=aggregate(rating~userId,movie,length)
 hist(perusercount$rating,breaks=50,main="Distribution of ratings for movie", xlab="Number of ratings",ylab="Count of movies")
 permoviecount=aggregate(rating~movieId,movie,length)
 hist(permoviecount$rating,breaks=50,main="Distribution of ratings by user", xlab="Number of ratings",ylab="Count of users")
 hist(movie$rating,breaks=5,main="Distribution of ratings", xlab="Rating",ylab="Count of movies")
-```
 
-
-```{r}
 n=length(movie$rating)
 
 total_avg=mean(movie$rating)
 user_avg=aggregate(rating~userId,movie,mean)
 movie_avg=aggregate(rating~movieId,movie,mean)
-  
+
 userids=user_avg[,1]
 movieids=movie_avg[,1]
-  
+
 userindex=match(movie$userId,userids)
 movieindex=match(movie$movieId,movieids)
-  
+
 movie$uindex<-userindex
 movie$mindex<-movieindex
 
-```
-
-
-
-```{r}
 test_ind <- sample(seq_len(n), size = floor(0.32*n))
 
 temp=as.data.frame(table(movie$movieId[-test_ind]))
@@ -227,55 +188,33 @@ test_ind=test_ind[!test_ind%in%validation_ind]
 
 movie_validate=movie[validation_ind,]
 movie_test=movie[test_ind,]
-```
 
-
-```{r}
-test1=gibbs(movie_train,4,10,100,100)
-mcmcplots(test1)
-plot_results(movie_train,test1,2)
-validation_results(test1,movie_validate,2)
-```
-
-
-```{r}
+# Case 1
 test2=gibbs(movie_train,4,500,1,1)
 mcmcplots(test2)
 plot_results(movie_train,test2,200)
 validation_results(test2,movie_test,200)
-```
 
-
-```{r}
+# Case 2
 test3=gibbs(movie_train,10,1000,1,1)
 mcmcplots(test3)
 plot_results(movie_train,test3,200)
 validation_results(test3,movie_validate,200)
-```
 
-
-```{r}
+# Case 3
 test4=gibbs(movie_train,20,1500,1,1)
 mcmcplots(test4)
 plot_results(movie_train,test4,1000)
 validation_results(test4,movie_validate,1000)
-```
 
-
-```{r}
+# Case 4
 test5=gibbs(movie_train,2,5000,1,1)
 mcmcplots(test5)
 plot_results(movie_train,test5,4000)
 validation_results(test5,movie_validate,4000)
+
+
+# Evaluate on test set
 validation_results(test5,movie_test,4000)
 print(mean(test5$mu[c(4000:5000)]))
 print(mean(test5$sigma2[c(4000:5000)]))
-```
-
-
-```{r}
-test6=gibbs(movie_train,2,2000,1,1)
-mcmcplots(test6)
-plot_results(movie_train,test6,1500)
-validation_results(test6,movie_test,1500)
-```
